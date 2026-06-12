@@ -30,6 +30,25 @@ namespace sysmon {
         void stopHook();
 
         void cleanupHook();
+
+    private:
+        /**
+         * @brief Reads disk statistics from the configured diskstats file.
+         *
+         * @return SystemStats containing the parsed disk information and the current
+         * time.
+         */
+        sysmon::SystemStats readStats();
+
+        /**
+         * @brief Parses a single line from the diskstats file.
+         *
+         * @param line The line from the diskstats file to parse.
+         * @param disk_info The DiskInfo structure to populate with the parsed data.
+         * @return true if the line was successfully parsed and the device is being
+         * monitored; false otherwise.
+         */
+        bool parseDiskstatsLine(std::string const& line, sysmon::DiskInfo& disk_info);
     };
 }
 
