@@ -82,7 +82,7 @@ bool Task::parseDiskstatsLine(std::string const& line, sysmon::DiskInfo& disk_in
         }
     }
 
-    unsigned long long t_reading = 0, t_writing = 0, t_doing_io = 0, t_weighted_io = 0,
+    uint64_t t_reading = 0, t_writing = 0, t_doing_io = 0, t_weighted_io = 0,
                        t_discarding = 0, t_flushing = 0;
 
     iss >> disk_info.reads_completed >> disk_info.reads_merged >>
