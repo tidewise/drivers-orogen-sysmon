@@ -131,10 +131,22 @@ describe OroGen.sysmon.Task do
     end
 
     it "emits INVALID_DISKSTATS_PATH error state if file cannot be opened" do
+        task.properties.diskstats_path = @mock_diskstats.path
+        task.properties.devices = []
+
+        syskit_configure_and_start(task)
+        expect_execution.to { have_one_new_sample(task.stats_port) }
+
+        File.delete(@mock_diskstats.path)
+
+        expect_execution.to { emit task.invalid_diskstats_path_event }
+    end
+
+    it "fails to configure if the file cannot be opened" do
         task.properties.diskstats_path = "/path/to/non/existent/diskstats/file"
 
-        syskit_configure(task)
-        expect_execution { task.start! }
-            .to { emit task.invalid_diskstats_path_event }
+        assert_raises(Roby::EmissionFailed) do
+            syskit_configure(task)
+        end
     end
 end

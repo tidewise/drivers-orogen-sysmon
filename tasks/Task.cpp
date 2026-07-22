@@ -22,6 +22,11 @@ bool Task::configureHook()
 
     m_devices_to_monitor = _devices.get();
     m_diskstats_path = _diskstats_path.get();
+
+    std::ifstream file(m_diskstats_path.c_str());
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open diskstats file: " + m_diskstats_path);
+    }
     return true;
 }
 bool Task::startHook()
@@ -83,7 +88,7 @@ bool Task::parseDiskstatsLine(std::string const& line, sysmon::DiskInfo& disk_in
     }
 
     uint64_t t_reading = 0, t_writing = 0, t_doing_io = 0, t_weighted_io = 0,
-                       t_discarding = 0, t_flushing = 0;
+             t_discarding = 0, t_flushing = 0;
 
     iss >> disk_info.reads_completed >> disk_info.reads_merged >>
         disk_info.sectors_read >> t_reading >> disk_info.writes_completed >>
